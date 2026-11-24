@@ -59,7 +59,6 @@ footer{text-align:center;color:var(--mute);font-size:14px}
       <button class="join" type="submit">הרשמה לתזכורות</button>
     </form>
     <p id="subok" class="ok" hidden></p>
-    <p class="demo">גרסת דוגמה: ההרשמה עדיין לא שומרת מיילים.</p>
   </section>
   <footer>מועדון הנוער קיבוץ נווה ים · פעילות בימי שלישי וחמישי</footer>
 </main>
@@ -124,10 +123,17 @@ function render(){
     $('when').textContent=today?'הפעילות היום! מחכים לכם 💙':'הפעילות הבאה: יום '+DAYS[next.getUTCDay()]+' '+next.getUTCDate()+'.'+(next.getUTCMonth()+1);}
   month(now);
 }
-$('subf').addEventListener('submit',e=>{e.preventDefault();const v=$('em').value.trim();
-  const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);$('em').setAttribute('aria-invalid',!ok);
-  if(!ok){$('subok').hidden=false;$('subok').textContent='נראה שחסר משהו בכתובת. נסו שוב.';return}
-  $('subok').hidden=false;$('subok').textContent='נרשמתם! התזכורת הראשונה תגיע בערב שלפני הפעילות הבאה.';$('subf').reset();});
+const FORM_POST='https://docs.google.com/forms/d/e/1FAIpQLSeg6otfVJkJc50yDERsuA5O0-zdVVr4199Nxz1K1duoail5Hg/formResponse';
+const FORM_FIELD='entry.659018175';
+$('subf').addEventListener('submit',async e=>{e.preventDefault();const v=$('em').value.trim();
+  const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);$('em').setAttribute('aria-invalid',!ok);$('subok').hidden=false;
+  if(!ok){$('subok').textContent='נראה שחסר משהו בכתובת. נסו שוב.';return}
+  const btn=$('subf').querySelector('button');btn.disabled=true;btn.textContent='שולח…';
+  try{await fetch(FORM_POST,{method:'POST',mode:'no-cors',body:new URLSearchParams({[FORM_FIELD]:v})});
+    $('subok').textContent='נרשמתם! התזכורת הראשונה תגיע בערב שלפני הפעילות הבאה.';$('subf').reset();}
+  catch(err){$('subok').textContent='משהו לא עבד. בדקו את החיבור לאינטרנט ונסו שוב.'}
+  btn.disabled=false;btn.textContent='הרשמה לתזכורות';
+});
 render();
 setInterval(render,5*60*1000);
 }
