@@ -65,15 +65,9 @@ footer{text-align:center;color:var(--mute);font-size:14px}
 <script>
 {
 const BASE='img/poster-base.jpg';
-// ---- settings Claude updates ----
-const ACTIVITY_DAYS=[2,4];           // 0=Sunday … 2=Tuesday, 4=Thursday
-const SWITCH_AT='22:00';             // after the last group ends, show the next activity
-const ROWS=[['א-ג','17:00','18:00'],['ד-ו','18:00','19:00'],['ז-ח','19:00','20:30'],['ט-יב','20:30','22:00']];
-const CANCELLED={};                  // e.g. {'2026-12-17':'חנוכה – אין פעילות'}
-const EXTRA={};                      // e.g. {'2026-12-01':'ערב פיצה!'} – bottom line on that day's poster
-const SIGNUP_URL='';
-const MONTHLY={'2026-11':'img/2026-11.jpg','2026-12':'img/2026-12.jpg'};   // monthly calendar image per month                 // newsletter / updates link
-// ---------------------------------
+// settings live in schedule.json (the email agent reads the same file)
+let ACTIVITY_DAYS=[2,4],SWITCH_AT='22:00',CANCELLED={},EXTRA={},MONTHLY={};
+let ROWS=[['א-ג','17:00','18:00'],['ד-ו','18:00','19:00'],['ז-ח','19:00','20:30'],['ט-יב','20:30','22:00']];
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const L={dayX:906,dateX:452,dayBase:671,rowsBase:[849,998,1182,1338],cx:702,numSize:75,labSize:96,sx:.94,gap:46,daySize:90,extraBase:1560};
@@ -134,8 +128,10 @@ $('subf').addEventListener('submit',async e=>{e.preventDefault();const v=$('em')
   catch(err){$('subok').textContent='משהו לא עבד. בדקו את החיבור לאינטרנט ונסו שוב.'}
   btn.disabled=false;btn.textContent='הרשמה לתזכורות';
 });
-render();
-setInterval(render,5*60*1000);
+fetch('schedule.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{
+  ACTIVITY_DAYS=j.activityDays||ACTIVITY_DAYS;SWITCH_AT=j.switchAt||SWITCH_AT;ROWS=j.rows||ROWS;
+  CANCELLED=j.cancelled||{};EXTRA=j.extra||{};MONTHLY=j.monthly||{};
+}).catch(()=>{}).finally(()=>{render();setInterval(render,5*60*1000)});
 }
 </script>
 </body>
