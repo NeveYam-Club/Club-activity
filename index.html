@@ -128,7 +128,8 @@ async function poster(d){
   if(ex){c.direction='rtl';c.textAlign='center';let s=110;c.font=s+'px GL';while(c.measureText(ex).width>1100&&s>50){s-=4;c.font=s+'px GL'}c.fillText(ex,660,L.extraBase)}
 }
 function month(now){
-  const d=now.date,k=d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1),src=MONTHLY[k];
+  let d=now.date,k=d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1),src=MONTHLY[k];
+  if(!src){d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1));k=d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1);src=MONTHLY[k]}
   if(!src){$('msec').hidden=true;return}
   if($('mimg').dataset.k!==k){$('mimg').src=src;$('mimg').dataset.k=k;$('mimg').alt='לוח הפעילות של '+MONTHS[d.getUTCMonth()];}
   $('mtitle').textContent='הלו״ז של '+MONTHS[d.getUTCMonth()];$('msec').hidden=false;
