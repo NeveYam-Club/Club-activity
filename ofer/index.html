@@ -143,8 +143,8 @@ function render(){
     $('when').textContent=today?'היום, '+dd+' · מחכים לכם':'הפעילות הבאה: '+dd;$('when').classList.toggle('today',today);}
   month(now);
 }
-const FORM_POST='';
-const FORM_FIELD='';
+const FORM_POST='https://docs.google.com/forms/d/e/1FAIpQLSeDeo5wKAUTsDqkGkuc2dc8-W1LQosiUccy2Fyprxc5uCMzkA/formResponse';
+const FORM_FIELD='entry.2039579549';
 if(!FORM_POST){document.querySelector('.hero .card').hidden=true;$('lead').textContent='הלו״ז מתעדכן לבד לפעילות הבאה, מיד כשהקודמת נגמרת.'}
 $('subf').addEventListener('submit',async e=>{e.preventDefault();const v=$('em').value.trim();
   const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);$('em').setAttribute('aria-invalid',!ok);$('subok').hidden=false;
